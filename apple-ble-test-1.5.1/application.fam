@@ -1,0 +1,14 @@
+App(
+    appid="apple_ble_spam",
+    name="Apple BLE Test",
+    apptype=FlipperAppType.EXTERNAL,
+    targets=["f7"],
+    entry_point="apple_ble_spam",
+    requires=["gui"],
+    stack_size=5 * 1024,
+    fap_icon="apple_10px.png",
+    fap_category="Bluetooth",
+    fap_author="BLE Test port",
+    fap_version="2.0",
+    fap_description="Controlled Apple BLE advertising test (12-second auto-stop)",
+)
