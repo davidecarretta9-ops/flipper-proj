@@ -1,0 +1,14 @@
+App(
+    appid="apple_popup_lab",
+    name="Apple Popup Lab",
+    apptype=FlipperAppType.EXTERNAL,
+    targets=["f7"],
+    entry_point="apple_popup_lab",
+    requires=["gui"],
+    stack_size=5 * 1024,
+    fap_icon="apple_10px.png",
+    fap_category="Bluetooth",
+    fap_author="Flipper BLE Test",
+    fap_version="1.0",
+    fap_description="Short low-power BLE proximity advertising experiment (no spam)",
+)
