@@ -4,8 +4,9 @@
  * Replacement for older Apple BLE Spam FAPs using obsolete custom_adv APIs.
  * Uses only supported furi_hal_bt_extra_beacon APIs.
  *
- * Manual test only, one advertisement format at a time, 30-second automatic
- * stop, 400ms interval, modest TX power. No unlimited flood / crash packets.
+ * Manual test only, one advertisement format at a time. Apple-shaped tests
+ * stop after 30 seconds. Ordinary FlipperLab beacon can stay on until OK.
+ * 400ms advertising interval, modest TX power; no popup flood/crash packets.
  * iPadOS may ignore legacy Continuity advertisements.
  */
 #include <furi.h>
@@ -99,7 +100,7 @@ static void make_data(TestMode mode, uint8_t* out, uint8_t* out_size) {
 static const char* describe_status(TestStatus s) {
     switch(s) {
     case StatusReady: return "Ready / UP DOWN select";
-    case StatusOn: return "Advertising (auto-stop)";
+    case StatusOn: return "Advertising";
     case StatusBusy: return "Beacon already in use";
     case StatusConfigFailed: return "BLE config error";
     case StatusDataFailed: return "BLE payload error";
@@ -189,13 +190,15 @@ static void draw_cb(Canvas* c, void* ctx) {
     canvas_draw_str(c, 3, 36, describe_status(st->status));
 
     char info[40];
-    if(st->on) {
+    if(st->mode == ModeBeacon) {
+        snprintf(info, sizeof(info), st->on ? "Continuous / OK to stop" : "Continuous FlipperLab");
+    } else if(st->on) {
         uint32_t elapsed = furi_get_tick() - st->started_at;
         uint32_t left = elapsed < MAX_DURATION_MS ? (MAX_DURATION_MS - elapsed + 999U) / 1000U : 0;
         snprintf(info, sizeof(info), "Stop in %lus | 400ms",
                  (unsigned long)left);
     } else {
-        snprintf(info, sizeof(info), "LOW RATE / 30s MAX");
+        snprintf(info, sizeof(info), "Apple test / 30s MAX");
     }
     canvas_draw_str(c, 3, 48, info);
 
@@ -236,7 +239,8 @@ int32_t apple_ble_spam(void* args) {
     while(running) {
         InputEvent event;
         FuriStatus got = furi_message_queue_get(events, &event, 100);
-        if(st->on && (uint32_t)(furi_get_tick() - st->started_at) >= MAX_DURATION_MS) {
+        if(st->on && st->mode != ModeBeacon &&
+           (uint32_t)(furi_get_tick() - st->started_at) >= MAX_DURATION_MS) {
             stop_advertising(st);
         }
 
