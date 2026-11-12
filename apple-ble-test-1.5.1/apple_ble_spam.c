@@ -4,7 +4,7 @@
  * Replacement for older Apple BLE Spam FAPs using obsolete custom_adv APIs.
  * Uses only supported furi_hal_bt_extra_beacon APIs.
  *
- * Manual test only, one advertisement format at a time, 12-second automatic
+ * Manual test only, one advertisement format at a time, 30-second automatic
  * stop, 400ms interval, modest TX power. No unlimited flood / crash packets.
  * iPadOS may ignore legacy Continuity advertisements.
  */
@@ -22,7 +22,7 @@
 #include <stdio.h>
 
 #define TAG "AppleBleTest"
-#define MAX_DURATION_MS 12000U
+#define MAX_DURATION_MS 30000U
 #define MODE_COUNT 4U
 
 typedef enum {
@@ -195,7 +195,7 @@ static void draw_cb(Canvas* c, void* ctx) {
         snprintf(info, sizeof(info), "Stop in %lus | 400ms",
                  (unsigned long)left);
     } else {
-        snprintf(info, sizeof(info), "LOW RATE / 12s MAX");
+        snprintf(info, sizeof(info), "LOW RATE / 30s MAX");
     }
     canvas_draw_str(c, 3, 48, info);
 
