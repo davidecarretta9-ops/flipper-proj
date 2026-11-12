@@ -1,0 +1,14 @@
+App(
+    appid="ble_spam",
+    name="BLE Test",
+    apptype=FlipperAppType.EXTERNAL,
+    targets=["f7"],
+    entry_point="ble_spam",
+    requires=["gui"],
+    stack_size=5 * 1024,
+    fap_icon="ble_spam_10px.png",
+    fap_category="Bluetooth",
+    fap_author="Flipper BLE Test",
+    fap_version="1.0",
+    fap_description="Single low-power BLE beacon for controlled testing; no spam",
+)
